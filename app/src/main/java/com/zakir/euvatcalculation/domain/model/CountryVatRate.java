@@ -7,6 +7,15 @@ public class CountryVatRate {
     String countryCode;
     List<VatPeriod> vatPeriods;
 
+    public CountryVatRate() {
+    }
+
+    public CountryVatRate(String countryName, String countryCode, List<VatPeriod> vatPeriods) {
+        this.countryName = countryName;
+        this.countryCode = countryCode;
+        this.vatPeriods = vatPeriods;
+    }
+
     public String getCountryName() {
         return countryName;
     }

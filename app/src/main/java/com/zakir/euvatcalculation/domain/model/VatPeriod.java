@@ -7,6 +7,14 @@ public class VatPeriod {
     Date effectFrom;
     List<VatTypeRate> vatTypeRates;
 
+    public VatPeriod() {
+    }
+
+    public VatPeriod(Date effectFrom, List<VatTypeRate> vatTypeRates) {
+        this.effectFrom = effectFrom;
+        this.vatTypeRates = vatTypeRates;
+    }
+
     public Date getEffectFrom() {
         return effectFrom;
     }

@@ -4,6 +4,14 @@ public class VatTypeRate {
     String name;
     double rate;
 
+    public VatTypeRate() {
+    }
+
+    public VatTypeRate(String name, double rate) {
+        this.name = name;
+        this.rate = rate;
+    }
+
     public String getName() {
         return name;
     }
