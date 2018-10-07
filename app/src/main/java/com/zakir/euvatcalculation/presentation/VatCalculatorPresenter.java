@@ -2,7 +2,7 @@ package com.zakir.euvatcalculation.presentation;
 
 import android.support.annotation.VisibleForTesting;
 
-import com.zakir.euvatcalculation.domain.repository.CountryVatRateRepository;
+import com.zakir.euvatcalculation.domain.repository.EUCountryVatRateRepository;
 import com.zakir.euvatcalculation.presentation.schedulers.BaseSchedulerProvider;
 
 import java.text.DecimalFormat;
@@ -14,15 +14,15 @@ import io.reactivex.disposables.Disposable;
 
 public class VatCalculatorPresenter implements VatCalculatorContact.Presenter {
 
-    private final CountryVatRateRepository countryVatRateRepository;
+    private final EUCountryVatRateRepository EUCountryVatRateRepository;
     private final BaseSchedulerProvider baseSchedulerProvider;
     private VatCalculatorContact.View view;
     private CompositeDisposable compositeDisposable;
     private DecimalFormat decimalFormat = new DecimalFormat();
 
     @Inject
-    public VatCalculatorPresenter(CountryVatRateRepository countryVatRateRepository, BaseSchedulerProvider baseSchedulerProvider) {
-        this.countryVatRateRepository = countryVatRateRepository;
+    public VatCalculatorPresenter(EUCountryVatRateRepository EUCountryVatRateRepository, BaseSchedulerProvider baseSchedulerProvider) {
+        this.EUCountryVatRateRepository = EUCountryVatRateRepository;
         this.baseSchedulerProvider = baseSchedulerProvider;
         compositeDisposable = new CompositeDisposable();
         decimalFormat.setMaximumFractionDigits(2);
@@ -38,7 +38,7 @@ public class VatCalculatorPresenter implements VatCalculatorContact.Presenter {
         view.showProgressLoading();
         compositeDisposable.clear();
 
-        Disposable disposable = countryVatRateRepository.getCountryVatRate()
+        Disposable disposable = EUCountryVatRateRepository.getCountryVatRate()
         .subscribeOn(baseSchedulerProvider.io())
         .observeOn(baseSchedulerProvider.ui())
         .subscribe(listOfCountryVatRate -> {

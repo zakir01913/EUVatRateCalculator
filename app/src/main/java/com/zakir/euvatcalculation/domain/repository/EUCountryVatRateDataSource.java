@@ -6,6 +6,6 @@ import java.util.List;
 
 import io.reactivex.Flowable;
 
-public interface CountryVatRateDataSource {
+public interface EUCountryVatRateDataSource {
     Flowable<List<CountryVatRate>> getCountryVatRate();
 }

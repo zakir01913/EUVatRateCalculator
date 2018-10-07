@@ -1,7 +1,7 @@
 package com.zakir.euvatcalculation.presentation;
 
 import com.zakir.euvatcalculation.domain.model.CountryVatRate;
-import com.zakir.euvatcalculation.domain.repository.CountryVatRateRepository;
+import com.zakir.euvatcalculation.domain.repository.EUCountryVatRateRepository;
 import com.zakir.euvatcalculation.presentation.schedulers.BaseSchedulerProvider;
 import com.zakir.euvatcalculation.utils.CountryVatRateTestUtils;
 
@@ -27,7 +27,7 @@ import static org.junit.Assert.assertThat;
 public class VatCalculatorPresenterTest {
 
     @Mock
-    CountryVatRateRepository countryVatRateRepository;
+    EUCountryVatRateRepository EUCountryVatRateRepository;
     @Mock
     BaseSchedulerProvider baseSchedulerProvider;
     @Mock
@@ -45,9 +45,9 @@ public class VatCalculatorPresenterTest {
         when(baseSchedulerProvider.computation()).thenReturn(testScheduler);
         when(baseSchedulerProvider.ui()).thenReturn(testScheduler);
         when(baseSchedulerProvider.io()).thenReturn(testScheduler);
-        when(countryVatRateRepository.getCountryVatRate()).then(answer -> Flowable.just(CountryVatRateTestUtils.getEmptyList()));
+        when(EUCountryVatRateRepository.getCountryVatRate()).then(answer -> Flowable.just(CountryVatRateTestUtils.getEmptyList()));
 
-        vatCalculatorPresenter = new VatCalculatorPresenter(countryVatRateRepository, baseSchedulerProvider);
+        vatCalculatorPresenter = new VatCalculatorPresenter(EUCountryVatRateRepository, baseSchedulerProvider);
         vatCalculatorPresenter.setView(view);
     }
 
@@ -55,7 +55,7 @@ public class VatCalculatorPresenterTest {
     public void loadVatData_initializeObservable() {
         vatCalculatorPresenter.loadVatData();
 
-        verify(countryVatRateRepository).getCountryVatRate();
+        verify(EUCountryVatRateRepository).getCountryVatRate();
         verify(baseSchedulerProvider).io();
         verify(baseSchedulerProvider).ui();
     }
@@ -85,7 +85,7 @@ public class VatCalculatorPresenterTest {
     @Test
     public void loadVatData_onReceiveData_callViewUpdateUI() {
         List<CountryVatRate> countryVatRates = CountryVatRateTestUtils.getDefaultVatData();
-        when(countryVatRateRepository.getCountryVatRate()).then(answer -> Flowable.just(countryVatRates));
+        when(EUCountryVatRateRepository.getCountryVatRate()).then(answer -> Flowable.just(countryVatRates));
 
         vatCalculatorPresenter.loadVatData();
         testScheduler.triggerActions();
