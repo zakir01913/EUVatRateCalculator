@@ -51,7 +51,7 @@ public class NetworkModule {
 
     {
         return new Retrofit.Builder()
-                .baseUrl("https://slack.com/api/")
+                .baseUrl("https://jsonvat.com/")
                 .client(okHttpClient)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson)).build();

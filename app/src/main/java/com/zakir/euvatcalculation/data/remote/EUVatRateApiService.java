@@ -7,6 +7,6 @@ import io.reactivex.Flowable;
 import retrofit2.http.GET;
 
 public interface EUVatRateApiService {
-    @GET
+    @GET(".")
     Flowable<EUVatRateCollection> getEUVatRates();
 }

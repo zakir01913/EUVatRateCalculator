@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity implements VatCalculatorCont
         setContentView(R.layout.activity_main);
         DaggerApplicationComponent.builder().build().inject(this);
         presenter.setView(this);
+        presenter.loadVatData();
     }
 
     @Override
