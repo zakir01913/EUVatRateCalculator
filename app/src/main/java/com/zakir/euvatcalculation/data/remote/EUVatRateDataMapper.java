@@ -13,17 +13,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
 public class EUVatRateDataMapper {
-    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+    SimpleDateFormat format;
+
+    @Inject
+    public EUVatRateDataMapper() {
+        format = new SimpleDateFormat("yyyy-MM-dd");
+    }
 
     public List<CountryVatRate> convertToDomain(EUVatRateCollection vatRateCollection) throws ParseException {
         List<CountryVatRate> countryVatRates = new ArrayList<>();
         if (vatRateCollection == null)
             return countryVatRates;
-        
+
         for (CountryVatRateData countryVatRateData : vatRateCollection.getCountryVatRateData()) {
 
             CountryVatRate countryVatRate = new CountryVatRate();
