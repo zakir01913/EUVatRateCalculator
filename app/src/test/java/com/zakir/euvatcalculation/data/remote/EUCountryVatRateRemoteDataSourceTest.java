@@ -46,7 +46,7 @@ public class EUCountryVatRateRemoteDataSourceTest {
     }
 
     @Test
-    public void getCountryVatRate_callEUVatRateDataMapperConvertToDomain() {
+    public void getCountryVatRate_callEUVatRateDataMapperConvertToDomain() throws Exception {
         EUVatRateCollection euVatRateCollection = EUVatRateCollectionUtils.getEUVatRateCollectionWithTwoRates();
         when(euVatRateApiService.getEUVatRates()).thenReturn(Flowable.just(euVatRateCollection));
 
@@ -56,6 +56,6 @@ public class EUCountryVatRateRemoteDataSourceTest {
         assertThat(argumentCaptor.getValue(), is(equalTo(euVatRateCollection)));
     }
 
-    
+
 
 }

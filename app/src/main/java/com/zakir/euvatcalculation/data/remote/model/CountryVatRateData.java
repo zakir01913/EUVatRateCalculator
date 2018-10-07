@@ -2,6 +2,7 @@ package com.zakir.euvatcalculation.data.remote.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CountryVatRateData {
@@ -9,7 +10,8 @@ public class CountryVatRateData {
     private String countryName;
     @SerializedName("country_code")
     private String countryCode;
-    private List<PeriodData> periodData;
+    @SerializedName("periods")
+    private List<PeriodData> periodData = new ArrayList<>();
 
     public String getCountryName() {
         return countryName;

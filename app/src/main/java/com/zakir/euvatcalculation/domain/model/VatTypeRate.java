@@ -2,12 +2,12 @@ package com.zakir.euvatcalculation.domain.model;
 
 public class VatTypeRate {
     String name;
-    float rate;
+    double rate;
 
     public VatTypeRate() {
     }
 
-    public VatTypeRate(String name, float rate) {
+    public VatTypeRate(String name, double rate) {
         this.name = name;
         this.rate = rate;
     }
@@ -20,11 +20,11 @@ public class VatTypeRate {
         this.name = name;
     }
 
-    public float getRate() {
+    public double getRate() {
         return rate;
     }
 
-    public void setRate(float rate) {
+    public void setRate(double rate) {
         this.rate = rate;
     }
 }

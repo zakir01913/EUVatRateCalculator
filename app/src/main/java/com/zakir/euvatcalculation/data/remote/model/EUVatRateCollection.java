@@ -2,13 +2,14 @@ package com.zakir.euvatcalculation.data.remote.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EUVatRateCollection {
     private String details;
     private String version;
     @SerializedName("rates")
-    private List<CountryVatRateData> countryVatRateData;
+    private List<CountryVatRateData> countryVatRateData = new ArrayList<>();
 
     public String getDetails() {
         return details;
