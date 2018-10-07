@@ -15,7 +15,9 @@ import java.util.List;
 import io.reactivex.Flowable;
 import io.reactivex.schedulers.TestScheduler;
 
+import static org.hamcrest.Matchers.closeTo;
 import static org.hamcrest.Matchers.comparesEqualTo;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -97,6 +99,22 @@ public class VatCalculatorPresenterTest {
         testScheduler.triggerActions();
 
         verify(view).hideProgressLoading();
+    }
+
+    @Test
+    public void calculateVat_withNoDecimalPoint_returnValidValue() {
+        float vat = vatCalculatorPresenter.calculateVat(100, 10);
+
+       assertThat((double)vat, is(closeTo(10.00, 0.009)));
+    }
+
+    @Test
+    public void calculateVat_withDecimalPoint_returnValidValue() {
+
+
+        float vat = vatCalculatorPresenter.calculateVat(100.50f, 10.5f);
+
+        assertThat((double)vat, is(closeTo(10.55, 0.009)));
     }
 
 }

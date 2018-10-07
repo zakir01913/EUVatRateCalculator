@@ -16,7 +16,10 @@ public interface VatCalculatorContact {
     }
 
     interface Presenter {
-       void setView(View view);
-       void loadVatData();
+        void setView(View view);
+
+        void loadVatData();
+
+        float calculateVat(float amount, float vatPercentage);
     }
 }
