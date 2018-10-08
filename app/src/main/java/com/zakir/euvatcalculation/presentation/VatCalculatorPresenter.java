@@ -63,7 +63,6 @@ public class VatCalculatorPresenter implements VatCalculatorContact.Presenter {
             view.hideProgressLoading();
         }, throwable -> {
             view.showError(throwable);
-            view.hideProgressLoading();
         });
 
         compositeDisposable.add(disposable);

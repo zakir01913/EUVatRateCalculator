@@ -128,7 +128,6 @@ public class VatCalculatorPresenterTest {
         testScheduler.triggerActions();
 
         verify(view).showError(any(NetworkConnectionException.class));
-        verify(view).hideProgressLoading();
     }
 
     @Test

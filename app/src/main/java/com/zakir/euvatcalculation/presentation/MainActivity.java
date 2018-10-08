@@ -17,6 +17,7 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.zakir.euvatcalculation.EUVatRateCalculatorApp;
 import com.zakir.euvatcalculation.R;
 import com.zakir.euvatcalculation.di.component.DaggerApplicationComponent;
 import com.zakir.euvatcalculation.domain.model.VatTypeRate;
@@ -58,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements VatCalculatorCont
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        DaggerApplicationComponent.builder().build().inject(this);
+        ((EUVatRateCalculatorApp)getApplicationContext()).getApplicationComponent().inject(this);
         presenter.setView(this);
         presenter.loadVatData();
 
@@ -143,7 +144,9 @@ public class MainActivity extends AppCompatActivity implements VatCalculatorCont
             textInputEditText.setError(message);
         } else {
             contentGroup.setVisibility(View.GONE);
+            progressFrameLayout.setVisibility(View.GONE);
             errorTextView.setText(message);
+            errorTextView.setVisibility(View.VISIBLE);
         }
     }
 
