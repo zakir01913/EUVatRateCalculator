@@ -79,6 +79,14 @@ public class VatCalculatorPresenter implements VatCalculatorContact.Presenter {
         updateTotalAmount();
     }
 
+    @Override
+    public void onCountryChange(int countryIndex) {
+        currentCountryIndex = countryIndex;
+        currentVatTypeRateIndex = 0;
+        view.updateRateSelection(countryVatRates.get(currentCountryIndex).getVatPeriods().get(0).getVatTypeRates());
+        updateTotalAmount();
+    }
+
     private void updateTotalAmount() {
         double amountWithTax = currentAmount + (currentAmount * getCurrentVatRate() / 100);
         view.updateTotalAmount(Double.parseDouble(decimalFormat.format(amountWithTax)));
@@ -107,7 +115,6 @@ public class VatCalculatorPresenter implements VatCalculatorContact.Presenter {
     }
 
     @VisibleForTesting
-
     public void setCurrentAmount(double currentAmount) {
         this.currentAmount = currentAmount;
     }

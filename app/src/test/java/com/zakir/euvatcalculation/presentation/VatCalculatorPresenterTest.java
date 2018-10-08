@@ -3,13 +3,16 @@ package com.zakir.euvatcalculation.presentation;
 import com.zakir.euvatcalculation.data.exception.EmptyEUVatRateListException;
 import com.zakir.euvatcalculation.data.exception.NetworkConnectionException;
 import com.zakir.euvatcalculation.domain.model.CountryVatRate;
+import com.zakir.euvatcalculation.domain.model.VatTypeRate;
 import com.zakir.euvatcalculation.domain.repository.EUCountryVatRateRepository;
 import com.zakir.euvatcalculation.presentation.schedulers.BaseSchedulerProvider;
 import com.zakir.euvatcalculation.utils.CountryVatRateTestUtils;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -20,9 +23,11 @@ import io.reactivex.schedulers.TestScheduler;
 
 import static org.hamcrest.Matchers.closeTo;
 import static org.hamcrest.Matchers.comparesEqualTo;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -34,6 +39,9 @@ public class VatCalculatorPresenterTest {
     BaseSchedulerProvider baseSchedulerProvider;
     @Mock
     VatCalculatorContact.View view;
+
+    @Captor
+    ArgumentCaptor<List<VatTypeRate>> vatTypeRateCaptor = ArgumentCaptor.forClass(List.class);
 
 
     VatCalculatorPresenter vatCalculatorPresenter;
@@ -150,6 +158,40 @@ public class VatCalculatorPresenterTest {
         vatCalculatorPresenter.onRateTypeChange(0);
         verify(view).updateTotalAmount(110);
 
+    }
+
+    @Test
+    public void onCountryChange_callViewUpdateRateSelection() {
+        List<CountryVatRate> countryVatRates = CountryVatRateTestUtils.getTwoEUVatRateData();
+        vatCalculatorPresenter.setCountryVatRates(countryVatRates);
+
+        vatCalculatorPresenter.onCountryChange(0);
+        vatCalculatorPresenter.onCountryChange(1);
+
+        verify(view, times(2)).updateRateSelection(vatTypeRateCaptor.capture());
+        assertThat(vatTypeRateCaptor.getAllValues().get(0), is(equalTo(
+                countryVatRates.get(0)
+                        .getVatPeriods().get(0)
+                        .getVatTypeRates()
+        )));
+        assertThat(vatTypeRateCaptor.getAllValues().get(1), is(equalTo(
+                countryVatRates.get(1)
+                        .getVatPeriods().get(0)
+                        .getVatTypeRates()
+        )));
+    }
+
+    @Test
+    public void onCountryChange_recalculateTax() {
+        List<CountryVatRate> countryVatRates = CountryVatRateTestUtils.getTwoEUVatRateData();
+        vatCalculatorPresenter.setCountryVatRates(countryVatRates);
+        vatCalculatorPresenter.setCurrentAmount(100);
+
+        vatCalculatorPresenter.onCountryChange(0);
+        verify(view).updateTotalAmount(104);
+
+        vatCalculatorPresenter.onCountryChange(1);
+        verify(view).updateTotalAmount(109);
     }
 
 }

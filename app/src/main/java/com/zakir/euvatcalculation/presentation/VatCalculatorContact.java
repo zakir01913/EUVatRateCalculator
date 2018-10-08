@@ -33,5 +33,7 @@ public interface VatCalculatorContact {
         void onAmountChange(double amount);
 
         void onRateTypeChange(int rateType);
+
+        void onCountryChange(int countryIndex);
     }
 }
