@@ -37,6 +37,8 @@ public class MainActivity extends AppCompatActivity implements VatCalculatorCont
 
     @Inject
     VatCalculatorPresenter presenter;
+    @Inject
+    DeviceUtils deviceUtils;
 
     @BindView(R.id.country_sp)
     Spinner countrySpinner;
@@ -119,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements VatCalculatorCont
         for (int i = 0; i < vatTypeRates.size(); i++) {
             RadioButton radioButton = new RadioButton(this);
             RadioGroup.LayoutParams layoutParams = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.WRAP_CONTENT);
-            layoutParams.setMargins(0, (int) (DeviceUtils.getDeviceDensity(this) * 8), 0, 0);
+            layoutParams.setMargins(0, (int) (deviceUtils.getDeviceDensity() * 8), 0, 0);
             radioButton.setLayoutParams(layoutParams);
             radioButton.setId(i);
             radioButton.setText(vatTypeRates.get(i).getName());

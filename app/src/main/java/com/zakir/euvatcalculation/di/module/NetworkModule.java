@@ -1,12 +1,18 @@
 package com.zakir.euvatcalculation.di.module;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.zakir.euvatcalculation.data.local.EUCountryVatRateLocalDataSource;
 import com.zakir.euvatcalculation.data.remote.EUCountryVatRateRemoteDataSource;
 import com.zakir.euvatcalculation.data.remote.EUVatRateApiService;
 import com.zakir.euvatcalculation.data.remote.EUVatRateDataMapper;
+import com.zakir.euvatcalculation.di.ApplicationContext;
+import com.zakir.euvatcalculation.di.EUVatRateLocalDataSource;
+import com.zakir.euvatcalculation.di.EUVatRateRemoteDataSource;
 import com.zakir.euvatcalculation.domain.repository.EUCountryVatRateDataSource;
+import com.zakir.euvatcalculation.utils.DeviceUtils;
 
 import javax.inject.Singleton;
 
@@ -65,7 +71,15 @@ public class NetworkModule {
 
     @Singleton
     @Provides
-    public EUCountryVatRateDataSource countryVatRateRemoteDataSource(EUVatRateApiService euVatRateApiService, EUVatRateDataMapper euVatRateDataMapper) {
-        return  new EUCountryVatRateRemoteDataSource(euVatRateApiService, euVatRateDataMapper);
+    @EUVatRateRemoteDataSource
+    public EUCountryVatRateDataSource countryVatRateRemoteDataSource(DeviceUtils deviceUtils, EUVatRateApiService euVatRateApiService, EUVatRateDataMapper euVatRateDataMapper) {
+        return  new EUCountryVatRateRemoteDataSource(deviceUtils, euVatRateApiService, euVatRateDataMapper);
+    }
+
+    @Singleton
+    @Provides
+    @EUVatRateLocalDataSource
+    public EUCountryVatRateDataSource countryVatRateLocalDataSource() {
+        return  new EUCountryVatRateLocalDataSource();
     }
 }

@@ -4,16 +4,24 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import com.zakir.euvatcalculation.di.ApplicationContext;
+
+import javax.inject.Inject;
+
 public class DeviceUtils {
 
-    private DeviceUtils() {
+    private Context context;
+
+    @Inject
+    public DeviceUtils(@ApplicationContext Context context) {
+        this.context = context;
     }
 
-    public static float getDeviceDensity(Context context) {
+    public float getDeviceDensity() {
         return context.getResources().getDisplayMetrics().density;
     }
 
-    public static boolean isThereInternetConnection(Context context) {
+    public boolean isThereInternetConnection() {
         boolean isConnected;
 
         ConnectivityManager connectivityManager =
