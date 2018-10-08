@@ -5,8 +5,10 @@ import android.support.annotation.VisibleForTesting;
 import com.zakir.euvatcalculation.data.exception.EmptyEUVatRateListException;
 import com.zakir.euvatcalculation.domain.model.CountryVatRate;
 import com.zakir.euvatcalculation.domain.repository.EUCountryVatRateRepository;
+import com.zakir.euvatcalculation.presentation.exception.InvalidCurrencyAmountException;
 import com.zakir.euvatcalculation.presentation.schedulers.BaseSchedulerProvider;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +27,7 @@ public class VatCalculatorPresenter implements VatCalculatorContact.Presenter {
     private DecimalFormat decimalFormat = new DecimalFormat();
     private int currentCountryIndex = 0;
     private int currentVatTypeRateIndex = 0;
-    private double currentAmount = 0.0f;
+    private BigDecimal currentAmount = new BigDecimal(0.0);
     private List<CountryVatRate> countryVatRates = new ArrayList<>();
 
     @Inject
@@ -68,8 +70,16 @@ public class VatCalculatorPresenter implements VatCalculatorContact.Presenter {
     }
 
     @Override
-    public void onAmountChange(double amount) {
-        currentAmount = amount;
+    public void onAmountChange(String amount) {
+        try {
+            if (amount.isEmpty()) {
+                currentAmount = new BigDecimal(0);
+            } else {
+                currentAmount = new BigDecimal(amount);
+            }
+        } catch (Exception exp) {
+            view.showError(new InvalidCurrencyAmountException());
+        }
         updateTotalAmount();
     }
 
@@ -88,8 +98,10 @@ public class VatCalculatorPresenter implements VatCalculatorContact.Presenter {
     }
 
     private void updateTotalAmount() {
-        double amountWithTax = currentAmount + (currentAmount * getCurrentVatRate() / 100);
-        view.updateTotalAmount(Double.parseDouble(decimalFormat.format(amountWithTax)));
+        BigDecimal factor = new BigDecimal(getCurrentVatRate() / 100);
+        BigDecimal tax = currentAmount.multiply(factor);
+        BigDecimal amountWithTax = currentAmount.add(tax);
+        view.updateTotalAmount(decimalFormat.format(amountWithTax));
     }
 
     private double getCurrentVatRate() {
@@ -115,7 +127,7 @@ public class VatCalculatorPresenter implements VatCalculatorContact.Presenter {
     }
 
     @VisibleForTesting
-    public void setCurrentAmount(double currentAmount) {
+    public void setCurrentAmount(BigDecimal currentAmount) {
         this.currentAmount = currentAmount;
     }
 }

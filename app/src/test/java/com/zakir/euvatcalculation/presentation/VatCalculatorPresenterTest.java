@@ -5,6 +5,7 @@ import com.zakir.euvatcalculation.data.exception.NetworkConnectionException;
 import com.zakir.euvatcalculation.domain.model.CountryVatRate;
 import com.zakir.euvatcalculation.domain.model.VatTypeRate;
 import com.zakir.euvatcalculation.domain.repository.EUCountryVatRateRepository;
+import com.zakir.euvatcalculation.presentation.exception.InvalidCurrencyAmountException;
 import com.zakir.euvatcalculation.presentation.schedulers.BaseSchedulerProvider;
 import com.zakir.euvatcalculation.utils.CountryVatRateTestUtils;
 
@@ -16,14 +17,15 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import io.reactivex.Flowable;
 import io.reactivex.schedulers.TestScheduler;
 
-import static org.hamcrest.Matchers.closeTo;
 import static org.hamcrest.Matchers.comparesEqualTo;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -42,6 +44,8 @@ public class VatCalculatorPresenterTest {
 
     @Captor
     ArgumentCaptor<List<VatTypeRate>> vatTypeRateCaptor = ArgumentCaptor.forClass(List.class);
+    @Captor
+    ArgumentCaptor<InvalidCurrencyAmountException> invalidCurrencyAmountExceptionArgumentCaptor = ArgumentCaptor.forClass(InvalidCurrencyAmountException.class);
 
 
     VatCalculatorPresenter vatCalculatorPresenter;
@@ -139,24 +143,41 @@ public class VatCalculatorPresenterTest {
     public void onAmountChange_recalculateTax() {
         vatCalculatorPresenter.setCountryVatRates(CountryVatRateTestUtils.getDefaultVatData());
 
-        vatCalculatorPresenter.onAmountChange(100.0);
-        verify(view).updateTotalAmount(110.0);
+        vatCalculatorPresenter.onAmountChange("100.0");
+        verify(view).updateTotalAmount("110");
 
-        vatCalculatorPresenter.onAmountChange(200.75);
-        verify(view).updateTotalAmount(220.82);
-
+        vatCalculatorPresenter.onAmountChange("200.75");
+        verify(view).updateTotalAmount("220.83");
     }
+
+    @Test
+    public void onAmountChange_withEmptyString_setTotalAmountZero() {
+        vatCalculatorPresenter.setCountryVatRates(CountryVatRateTestUtils.getDefaultVatData());
+
+        vatCalculatorPresenter.onAmountChange("");
+        verify(view).updateTotalAmount("0");
+    }
+
+    @Test
+    public void onAmountChange_invalidCurrencyAmount_callViewShowErrorWithInvalidCurrencyAmountException() {
+        vatCalculatorPresenter.setCountryVatRates(CountryVatRateTestUtils.getDefaultVatData());
+
+        vatCalculatorPresenter.onAmountChange("100SS.0");
+        verify(view).showError(invalidCurrencyAmountExceptionArgumentCaptor.capture());
+        assertThat(invalidCurrencyAmountExceptionArgumentCaptor.getValue(), is(instanceOf(InvalidCurrencyAmountException.class)));
+    }
+
 
     @Test
     public void onVatRateTypeChange_recalculateTax() {
         vatCalculatorPresenter.setCountryVatRates(CountryVatRateTestUtils.getDefaultVatData());
-        vatCalculatorPresenter.setCurrentAmount(100);
+        vatCalculatorPresenter.setCurrentAmount(new BigDecimal(100));
 
         vatCalculatorPresenter.onRateTypeChange(1);
-        verify(view).updateTotalAmount(120.0);
+        verify(view).updateTotalAmount("120");
 
         vatCalculatorPresenter.onRateTypeChange(0);
-        verify(view).updateTotalAmount(110);
+        verify(view).updateTotalAmount("110");
 
     }
 
@@ -185,13 +206,13 @@ public class VatCalculatorPresenterTest {
     public void onCountryChange_recalculateTax() {
         List<CountryVatRate> countryVatRates = CountryVatRateTestUtils.getTwoEUVatRateData();
         vatCalculatorPresenter.setCountryVatRates(countryVatRates);
-        vatCalculatorPresenter.setCurrentAmount(100);
+        vatCalculatorPresenter.setCurrentAmount(new BigDecimal(100));
 
         vatCalculatorPresenter.onCountryChange(0);
-        verify(view).updateTotalAmount(104);
+        verify(view).updateTotalAmount("104");
 
         vatCalculatorPresenter.onCountryChange(1);
-        verify(view).updateTotalAmount(109);
+        verify(view).updateTotalAmount("109");
     }
 
 }

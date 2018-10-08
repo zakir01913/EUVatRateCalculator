@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.zakir.euvatcalculation.domain.model.VatTypeRate;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface VatCalculatorContact {
@@ -18,7 +19,7 @@ public interface VatCalculatorContact {
 
         void updateRateSelection(List<VatTypeRate> vatTypeRates);
 
-        void updateTotalAmount(double totalAmount);
+        void updateTotalAmount(String totalAmount);
 
         void showError(Throwable throwable);
 
@@ -30,7 +31,7 @@ public interface VatCalculatorContact {
 
         void loadVatData();
 
-        void onAmountChange(double amount);
+        void onAmountChange(String amount);
 
         void onRateTypeChange(int rateType);
 
