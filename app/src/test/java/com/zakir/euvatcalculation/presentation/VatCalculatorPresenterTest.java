@@ -18,6 +18,7 @@ import io.reactivex.schedulers.TestScheduler;
 import static org.hamcrest.Matchers.closeTo;
 import static org.hamcrest.Matchers.comparesEqualTo;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -90,7 +91,7 @@ public class VatCalculatorPresenterTest {
         vatCalculatorPresenter.loadVatData();
         testScheduler.triggerActions();
 
-        verify(view).updateUI(countryVatRates);
+        verify(view).updateCountrySpinner(any(List.class));
     }
 
     @Test

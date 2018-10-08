@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">EUVatCalculation</string>
+    <string name="country_level">Country</string>
+    <string name="currency_hint_et">Currency Amount</string>
+    <string name="total_amount_level">Total Amount:</string>
+    <string name="rate_level">Rate:</string>
 </resources>
