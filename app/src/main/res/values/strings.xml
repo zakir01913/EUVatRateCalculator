@@ -1,10 +1,10 @@
 <resources>
     <string name="app_name">EUVatCalculation</string>
-    <string name="country_level">Country</string>
-    <string name="currency_hint_et">Currency Amount</string>
+    <string name="country_level">Country:</string>
+    <string name="currency_hint_et">Currency Amount:</string>
     <string name="total_amount_level">Total Amount:</string>
     <string name="rate_level">Rate:</string>
     <string name="exception_message_no_data_found">No data found</string>
     <string name="exception_message_no_connection">No Internet connection</string>
-    <string name="exception_message_generic">Error occured!</string>
+    <string name="exception_message_generic">Error occurred!</string>
 </resources>
