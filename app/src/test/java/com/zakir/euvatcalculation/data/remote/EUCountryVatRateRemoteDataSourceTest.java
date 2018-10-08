@@ -1,6 +1,7 @@
 package com.zakir.euvatcalculation.data.remote;
 
 import com.zakir.euvatcalculation.data.remote.model.EUVatRateCollection;
+import com.zakir.euvatcalculation.utils.DeviceUtils;
 import com.zakir.euvatcalculation.utils.EUVatRateCollectionUtils;
 
 import org.junit.Before;
@@ -25,6 +26,8 @@ public class EUCountryVatRateRemoteDataSourceTest {
     EUVatRateApiService euVatRateApiService;
     @Mock
     EUVatRateDataMapper euVatRateDataMapper;
+    @Mock
+    DeviceUtils deviceUtils;
 
     @Captor
     ArgumentCaptor<EUVatRateCollection> argumentCaptor = ArgumentCaptor.forClass(EUVatRateCollection.class);
@@ -34,7 +37,8 @@ public class EUCountryVatRateRemoteDataSourceTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         when(euVatRateApiService.getEUVatRates()).thenReturn(Flowable.just(EUVatRateCollectionUtils.getEmptyEUVatRateCollection()));
-        euCountryVatRateRemoteDataSource = new EUCountryVatRateRemoteDataSource(euVatRateApiService, euVatRateDataMapper);
+        when(deviceUtils.isThereInternetConnection()).thenReturn(true);
+        euCountryVatRateRemoteDataSource = new EUCountryVatRateRemoteDataSource(deviceUtils, euVatRateApiService, euVatRateDataMapper);
         testSubscriber = new TestSubscriber();
     }
 

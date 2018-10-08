@@ -1,12 +1,8 @@
 package com.zakir.euvatcalculation.domain.repository;
 
-import android.content.Context;
-
-import com.zakir.euvatcalculation.data.exception.NetworkConnectionException;
-import com.zakir.euvatcalculation.di.ApplicationContext;
+import com.zakir.euvatcalculation.di.EUVatRateLocalDataSource;
+import com.zakir.euvatcalculation.di.EUVatRateRemoteDataSource;
 import com.zakir.euvatcalculation.domain.model.CountryVatRate;
-import com.zakir.euvatcalculation.presentation.schedulers.BaseSchedulerProvider;
-import com.zakir.euvatcalculation.utils.DeviceUtils;
 
 import java.util.List;
 
@@ -16,20 +12,19 @@ import io.reactivex.Flowable;
 
 public class EUCountryVatRateRepository {
 
-    private final EUCountryVatRateDataSource EUCountryVatRateDataSource;
-    private final Context context;
+    private final EUCountryVatRateDataSource remoteDataSource;
+    private final EUCountryVatRateDataSource localDataSource;
 
     @Inject
-    public EUCountryVatRateRepository(@ApplicationContext Context context, EUCountryVatRateDataSource EUCountryVatRateDataSource) {
-        this.EUCountryVatRateDataSource = EUCountryVatRateDataSource;
-        this.context = context;
+    public EUCountryVatRateRepository(
+            @EUVatRateRemoteDataSource EUCountryVatRateDataSource remoteDataSource,
+            @EUVatRateLocalDataSource EUCountryVatRateDataSource localDataSource
+            ) {
+        this.remoteDataSource = remoteDataSource;
+        this.localDataSource = localDataSource;
     }
 
     public Flowable<List<CountryVatRate>> getCountryVatRate() {
-        if (DeviceUtils.isThereInternetConnection(context)){
-            return EUCountryVatRateDataSource.getCountryVatRate();
-        } else {
-            return Flowable.error(new NetworkConnectionException());
-        }
+        return remoteDataSource.getCountryVatRate();
     }
 }
