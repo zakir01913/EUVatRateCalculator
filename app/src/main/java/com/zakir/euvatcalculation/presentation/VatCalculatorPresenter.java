@@ -24,6 +24,8 @@ public class VatCalculatorPresenter implements VatCalculatorContact.Presenter {
     private CompositeDisposable compositeDisposable;
     private DecimalFormat decimalFormat = new DecimalFormat();
     private int currentCountryIndex = 0;
+    private int currentVatTypeRateIndex = 0;
+    private double currentAmount = 0.0f;
     private List<CountryVatRate> countryVatRates = new ArrayList<>();
 
     @Inject
@@ -50,7 +52,9 @@ public class VatCalculatorPresenter implements VatCalculatorContact.Presenter {
         .subscribe(listOfCountryVatRate -> {
             countryVatRates = listOfCountryVatRate;
             if (!countryVatRates.isEmpty()) {
+                currentCountryIndex = 0;
                 view.updateCountrySpinner(getCountryList(countryVatRates));
+                view.updateRateSelection(countryVatRates.get(currentCountryIndex).getVatPeriods().get(0).getVatTypeRates());
             } else {
                 view.showError(new EmptyEUVatRateListException());
             }
@@ -64,9 +68,18 @@ public class VatCalculatorPresenter implements VatCalculatorContact.Presenter {
     }
 
     @Override
-    public float calculateVat(float amount, float vatPercentage) {
-        String vat = decimalFormat.format(amount * vatPercentage / 100);
-        return Float.parseFloat(vat);
+    public void onAmountChange(double amount) {
+        currentAmount = amount;
+        double amountWithTax = Double.parseDouble(decimalFormat.format(currentAmount + calculateVat()));
+        view.updateTotalAmount(amountWithTax);
+    }
+
+    private double calculateVat() {
+        return currentAmount * getCurrentVatRate() / 100;
+    }
+
+    private double getCurrentVatRate() {
+        return countryVatRates.get(currentCountryIndex).getVatPeriods().get(0).getVatTypeRates().get(currentVatTypeRateIndex).getRate();
     }
 
     private List<String> getCountryList(List<CountryVatRate> countryVatRates) {
@@ -80,5 +93,10 @@ public class VatCalculatorPresenter implements VatCalculatorContact.Presenter {
     @VisibleForTesting
     public CompositeDisposable getCompositeDisposable() {
         return compositeDisposable;
+    }
+
+    @VisibleForTesting
+    public void setCountryVatRates(List<CountryVatRate> countryVatRates) {
+        this.countryVatRates = countryVatRates;
     }
 }

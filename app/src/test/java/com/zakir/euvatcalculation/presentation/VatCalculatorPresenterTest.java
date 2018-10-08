@@ -9,6 +9,7 @@ import com.zakir.euvatcalculation.utils.CountryVatRateTestUtils;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -84,14 +85,15 @@ public class VatCalculatorPresenterTest {
     }
 
     @Test
-    public void loadVatData_onReceiveData_callViewUpdateUI() {
+    public void loadVatData_onReceiveData_callViewUpdateUIMethods() {
         List<CountryVatRate> countryVatRates = CountryVatRateTestUtils.getDefaultVatData();
         when(EUCountryVatRateRepository.getCountryVatRate()).then(answer -> Flowable.just(countryVatRates));
 
         vatCalculatorPresenter.loadVatData();
         testScheduler.triggerActions();
 
-        verify(view).updateCountrySpinner(any(List.class));
+        verify(view).updateCountrySpinner(ArgumentMatchers.anyList());
+        verify(view).updateRateSelection(ArgumentMatchers.anyList());
         verify(view).hideProgressLoading();
     }
 
@@ -126,19 +128,15 @@ public class VatCalculatorPresenterTest {
     }
 
     @Test
-    public void calculateVat_withNoDecimalPoint_returnValidValue() {
-        float vat = vatCalculatorPresenter.calculateVat(100, 10);
+    public void onAmountChange_recalculateTax() {
+        vatCalculatorPresenter.setCountryVatRates(CountryVatRateTestUtils.getDefaultVatData());
 
-       assertThat((double)vat, is(closeTo(10.00, 0.009)));
-    }
+        vatCalculatorPresenter.onAmountChange(100.0);
+        verify(view).updateTotalAmount(110.0);
 
-    @Test
-    public void calculateVat_withDecimalPoint_returnValidValue() {
+        vatCalculatorPresenter.onAmountChange(200.75);
+        verify(view).updateTotalAmount(220.82);
 
-
-        float vat = vatCalculatorPresenter.calculateVat(100.50f, 10.5f);
-
-        assertThat((double)vat, is(closeTo(10.55, 0.009)));
     }
 
 }

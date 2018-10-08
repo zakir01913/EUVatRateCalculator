@@ -18,7 +18,7 @@ public interface VatCalculatorContact {
 
         void updateRateSelection(List<VatTypeRate> vatTypeRates);
 
-        void updateTotalAmount(float totalAmount);
+        void updateTotalAmount(double totalAmount);
 
         void showError(Throwable throwable);
 
@@ -30,6 +30,6 @@ public interface VatCalculatorContact {
 
         void loadVatData();
 
-        float calculateVat(float amount, float vatPercentage);
+        void onAmountChange(double amount);
     }
 }

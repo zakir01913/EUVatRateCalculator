@@ -15,8 +15,8 @@ public class CountryVatRateTestUtils {
 
     public static List<CountryVatRate> getDefaultVatData() {
         List<VatTypeRate> vatTypeRates = new ArrayList<>();
-        vatTypeRates.add(new VatTypeRate("standard", 20));
         vatTypeRates.add(new VatTypeRate("reduced", 10));
+        vatTypeRates.add(new VatTypeRate("standard", 20));
         VatPeriod vatPeriod = new VatPeriod(new Date(), vatTypeRates);
         List<VatPeriod> vatPeriods = new ArrayList<>();
         vatPeriods.add(vatPeriod);
