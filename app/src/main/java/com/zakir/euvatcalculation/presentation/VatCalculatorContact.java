@@ -31,5 +31,7 @@ public interface VatCalculatorContact {
         void loadVatData();
 
         void onAmountChange(double amount);
+
+        void onRateTypeChange(int rateType);
     }
 }

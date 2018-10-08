@@ -139,4 +139,17 @@ public class VatCalculatorPresenterTest {
 
     }
 
+    @Test
+    public void onVatRateTypeChange_recalculateTax() {
+        vatCalculatorPresenter.setCountryVatRates(CountryVatRateTestUtils.getDefaultVatData());
+        vatCalculatorPresenter.setCurrentAmount(100);
+
+        vatCalculatorPresenter.onRateTypeChange(1);
+        verify(view).updateTotalAmount(120.0);
+
+        vatCalculatorPresenter.onRateTypeChange(0);
+        verify(view).updateTotalAmount(110);
+
+    }
+
 }
