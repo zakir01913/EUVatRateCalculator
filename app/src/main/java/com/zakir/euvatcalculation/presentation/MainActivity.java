@@ -1,5 +1,6 @@
 package com.zakir.euvatcalculation.presentation;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ArrayAdapter;
@@ -60,6 +61,16 @@ public class MainActivity extends AppCompatActivity implements VatCalculatorCont
     @Override
     public void updateTotalAmount(float totalAmount) {
 
+    }
+
+    @Override
+    public void showError(Throwable throwable) {
+
+    }
+
+    @Override
+    public Context getViewContext() {
+        return this;
     }
 
 }

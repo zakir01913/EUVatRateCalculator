@@ -1,5 +1,7 @@
 package com.zakir.euvatcalculation.presentation;
 
+import com.zakir.euvatcalculation.data.exception.EmptyEUVatRateListException;
+import com.zakir.euvatcalculation.data.exception.NetworkConnectionException;
 import com.zakir.euvatcalculation.domain.model.CountryVatRate;
 import com.zakir.euvatcalculation.domain.repository.EUCountryVatRateRepository;
 import com.zakir.euvatcalculation.presentation.schedulers.BaseSchedulerProvider;
@@ -17,13 +19,11 @@ import io.reactivex.schedulers.TestScheduler;
 
 import static org.hamcrest.Matchers.closeTo;
 import static org.hamcrest.Matchers.comparesEqualTo;
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
 
 public class VatCalculatorPresenterTest {
 
@@ -92,6 +92,29 @@ public class VatCalculatorPresenterTest {
         testScheduler.triggerActions();
 
         verify(view).updateCountrySpinner(any(List.class));
+        verify(view).hideProgressLoading();
+    }
+
+    @Test
+    public void loadVatData_onReceiveEmptyData_callShowErrorMessage() {
+        List<CountryVatRate> countryVatRates = CountryVatRateTestUtils.getEmptyList();
+        when(EUCountryVatRateRepository.getCountryVatRate()).then(answer -> Flowable.just(countryVatRates));
+
+        vatCalculatorPresenter.loadVatData();
+        testScheduler.triggerActions();
+
+        verify(view).showError(any(EmptyEUVatRateListException.class));
+    }
+
+    @Test
+    public void loadVatData_onReceiveError_callShowErrorMessage() {
+        when(EUCountryVatRateRepository.getCountryVatRate()).then(answer -> Flowable.error(new NetworkConnectionException()));
+
+        vatCalculatorPresenter.loadVatData();
+        testScheduler.triggerActions();
+
+        verify(view).showError(any(NetworkConnectionException.class));
+        verify(view).hideProgressLoading();
     }
 
     @Test

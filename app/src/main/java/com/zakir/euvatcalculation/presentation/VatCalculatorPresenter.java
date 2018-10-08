@@ -2,6 +2,7 @@ package com.zakir.euvatcalculation.presentation;
 
 import android.support.annotation.VisibleForTesting;
 
+import com.zakir.euvatcalculation.data.exception.EmptyEUVatRateListException;
 import com.zakir.euvatcalculation.domain.model.CountryVatRate;
 import com.zakir.euvatcalculation.domain.repository.EUCountryVatRateRepository;
 import com.zakir.euvatcalculation.presentation.schedulers.BaseSchedulerProvider;
@@ -23,6 +24,7 @@ public class VatCalculatorPresenter implements VatCalculatorContact.Presenter {
     private CompositeDisposable compositeDisposable;
     private DecimalFormat decimalFormat = new DecimalFormat();
     private int currentCountryIndex = 0;
+    private List<CountryVatRate> countryVatRates = new ArrayList<>();
 
     @Inject
     public VatCalculatorPresenter(EUCountryVatRateRepository EUCountryVatRateRepository, BaseSchedulerProvider baseSchedulerProvider) {
@@ -46,8 +48,16 @@ public class VatCalculatorPresenter implements VatCalculatorContact.Presenter {
         .subscribeOn(baseSchedulerProvider.io())
         .observeOn(baseSchedulerProvider.ui())
         .subscribe(listOfCountryVatRate -> {
+            countryVatRates = listOfCountryVatRate;
+            if (!countryVatRates.isEmpty()) {
+                view.updateCountrySpinner(getCountryList(countryVatRates));
+            } else {
+                view.showError(new EmptyEUVatRateListException());
+            }
             view.hideProgressLoading();
-            view.updateCountrySpinner(getCountryList(listOfCountryVatRate));
+        }, throwable -> {
+            view.showError(throwable);
+            view.hideProgressLoading();
         });
 
         compositeDisposable.add(disposable);

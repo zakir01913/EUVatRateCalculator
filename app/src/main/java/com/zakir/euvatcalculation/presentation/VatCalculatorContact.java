@@ -1,5 +1,7 @@
 package com.zakir.euvatcalculation.presentation;
 
+import android.content.Context;
+
 import com.zakir.euvatcalculation.domain.model.VatTypeRate;
 
 import java.util.List;
@@ -17,6 +19,10 @@ public interface VatCalculatorContact {
         void updateRateSelection(List<VatTypeRate> vatTypeRates);
 
         void updateTotalAmount(float totalAmount);
+
+        void showError(Throwable throwable);
+
+        Context getViewContext();
     }
 
     interface Presenter {
