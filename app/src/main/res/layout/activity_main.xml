@@ -31,6 +31,7 @@
         app:layout_constraintTop_toBottomOf="@id/country_sp">
 
         <android.support.design.widget.TextInputEditText
+            android:id="@+id/currency_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/currency_hint_et" />
@@ -48,8 +49,8 @@
     <RadioGroup
         android:id="@+id/rate_rg"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="16dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/rate_level_tv"></RadioGroup>
