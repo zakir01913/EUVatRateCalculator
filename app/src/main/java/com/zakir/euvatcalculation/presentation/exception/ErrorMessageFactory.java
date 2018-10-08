@@ -20,6 +20,8 @@ public class ErrorMessageFactory {
       message = context.getString(R.string.exception_message_no_connection);
     } else if (throwable instanceof EmptyEUVatRateListException) {
       message = context.getString(R.string.exception_message_no_data_found);
+    } else if (throwable instanceof InvalidCurrencyAmountException) {
+      message = context.getString(R.string.exception_message_invalid_currency_amount);
     }
 
     return message;
